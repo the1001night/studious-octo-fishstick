@@ -69,8 +69,47 @@ const validateProfileUpdate = [
   handleValidationErrors
 ];
 
+// Дополнительная валидация для администраторских действий
+const validateAdminAction = [
+  body('action')
+    .isIn(['activate', 'deactivate', 'delete'])
+    .withMessage('Недопустимое действие'),
+
+  body('userId')
+    .isMongoId()
+    .withMessage('Неверный ID пользователя'),
+
+  handleValidationErrors
+];
+
+// Валидация для сброса пароля
+const validatePasswordReset = [
+  body('email')
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Введите корректный email'),
+
+  handleValidationErrors
+];
+
+// Валидация для изменения роли пользователя
+const validateRoleChange = [
+  body('role')
+    .isIn(['user', 'admin'])
+    .withMessage('Роль должна быть user или admin'),
+
+  body('userId')
+    .isMongoId()
+    .withMessage('Неверный ID пользователя'),
+
+  handleValidationErrors
+];
+
 module.exports = {
   validateRegistration,
   validateLogin,
-  validateProfileUpdate
+  validateProfileUpdate,
+  validateAdminAction,
+  validatePasswordReset,
+  validateRoleChange
 };
