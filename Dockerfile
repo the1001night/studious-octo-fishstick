@@ -1,8 +1,8 @@
 FROM node:20-alpine
 WORKDIR /app
 COPY package*.json .
-RUN npm install --production && adduser -D -u 1000 appuser && chown -R appuser:appuser /app
-USER appuser
+RUN npm install --production && chown -R node:node /app
+USER node
 COPY . .
 EXPOSE 5000
 CMD ["npm", "start"]
