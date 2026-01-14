@@ -7,8 +7,10 @@ const constants = require('./config/constants');
 // Загрузить переменные окружения
 dotenv.config();
 
-// Подключиться к базе данных
-connectDB();
+// Подключиться к базе данных (только если не в тестовой среде)
+if (process.env.NODE_ENV !== 'test') {
+  connectDB();
+}
 
 const app = express();
 

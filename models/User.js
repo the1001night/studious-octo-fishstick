@@ -47,12 +47,13 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function(next) {
   // Только хэшировать если пароль был изменен
   if (!this.isModified('password')) {
-    next();
+    return next();
   }
 
   // Хэшировать пароль с cost 12
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
 
 // Метод для проверки пароля
@@ -62,7 +63,10 @@ userSchema.methods.matchPassword = async function(enteredPassword) {
 
 // Обновление updatedAt перед сохранением
 userSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
+  // Обновляем updatedAt только если это не новая запись
+  if (!this.isNew) {
+    this.updatedAt = Date.now();
+  }
   next();
 });
 
